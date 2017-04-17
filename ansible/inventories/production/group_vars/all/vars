@@ -1,0 +1,11 @@
+---
+
+env: prod
+env_dns_sub: ""
+
+db_server_hostname : dbserver-prod-1.mypoc.io
+www_db_schema : brian_prod_db
+
+www_db_usr : "{{ vault_www_db_usr }}"
+www_db_psw : "{{ vault_www_db_psw }}"
+

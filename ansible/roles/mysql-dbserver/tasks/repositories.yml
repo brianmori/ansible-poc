@@ -1,0 +1,37 @@
+- name: Add MySQL 5.6 repository
+  yum_repository:
+    name: mysql56-community
+    enabled: no
+    gpgcheck: no
+    file: mysql-community
+    baseurl: http://repo.mysql.com/yum/mysql-5.6-community/el/7/$basearch/
+    description: MySQL 5.6 repo
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Add MySQL 5.7 repository
+  yum_repository:
+    name: mysql57-community
+    enabled: yes
+    gpgcheck: no
+    file: mysql-community
+    baseurl: http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+    description: MySQL 5.7 repo
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Add MySQL Connectors Community repository
+  yum_repository:
+    name: mysql-connectors-community
+    enabled: yes
+    file: mysql-community
+    baseurl: http://repo.mysql.com/yum/mysql-connectors-community/el/7/$basearch/
+    description: MySQL Connectors repo
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Add MySQL Tools Community repository
+  yum_repository:
+    name: mysql-tools-community
+    enabled: yes
+    file: mysql-community
+    baseurl: http://repo.mysql.com/yum/mysql-tools-community/el/7/$basearch/
+    description: MySQL Tools repo
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"

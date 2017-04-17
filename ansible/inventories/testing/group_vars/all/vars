@@ -1,0 +1,11 @@
+---
+
+env: test
+env_dns_sub: "test."
+
+db_server_hostname : dbserver-test-1.mypoc.io
+www_db_schema : brian_test_db
+
+www_db_usr : "{{ vault_www_db_usr }}"
+www_db_psw : "{{ vault_www_db_psw }}"
+

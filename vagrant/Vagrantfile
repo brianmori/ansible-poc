@@ -1,0 +1,62 @@
+Vagrant.configure("2") do |config|
+
+### Web Servers  
+  config.vm.define "ws_test_1" do |ws_test_1|
+    ws_test_1.vm.box = "centos/7"
+	ws_test_1.vm.hostname = "webserver-test-1.mypoc.io"
+    ws_test_1.vm.network "private_network", ip: "192.168.56.2"
+	ws_test_1.vm.network "forwarded_port", guest: 80, host_ip: "127.0.0.1", host: 8080, id: "apache"
+	ws_test_1.vm.network "forwarded_port", guest: 443, host_ip: "127.0.0.1", host: 8443, id: "apache"
+	ws_test_1.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: 10000, id: "ssh"	
+  end
+  
+  config.vm.define "ws_prod_1", autostart: false do |ws_prod_1|
+    ws_prod_1.vm.box = "centos/7"
+	ws_prod_1.vm.hostname = "webserver-prod-1.mypoc.io"
+    ws_prod_1.vm.network "private_network", ip: "192.168.56.4"
+	ws_prod_1.vm.network "forwarded_port", guest: 80, host_ip: "127.0.0.1", host: 8081, id: "apache"
+	ws_prod_1.vm.network "forwarded_port", guest: 443, host_ip: "127.0.0.1", host: 8444, id: "apache"
+	ws_prod_1.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: 10001, id: "ssh"	
+  end
+ 
+### Database Servers 
+  config.vm.define "db_test_1" do |db_test_1|
+    db_test_1.vm.box = "centos/7"
+	db_test_1.vm.hostname = "dbserver-test-1.mypoc.io"
+    db_test_1.vm.network "private_network", ip: "192.168.56.3"
+	db_test_1.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: 10002, id: "ssh"	
+  end 
+  
+  config.vm.define "db_prod_1", autostart: false do |db_prod_1|
+    db_prod_1.vm.box = "centos/7"
+	db_prod_1.vm.hostname = "dbserver-prod-1.mypoc.io"
+    db_prod_1.vm.network "private_network", ip: "192.168.56.5"
+	db_prod_1.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: 10003, id: "ssh"	
+  end 
+  
+## Provision SSH key and resolv.conf for DNS resolution
+# copy resolv.conf in a tmp directory first as the copy needs to be executed as root
+  config.vm.provision "file", source: "resolv.conf", destination: "/tmp/resolv.conf"
+  
+  # copy the resolv.conf in the correct path
+  
+  config.vm.provision "shell" do |s|
+
+  #    ssh_pub_key = File.readlines("C:\\Users\\Xeno\\Desktop\\VMs\\ssh\\id_rsa.pub.txt").first.strip
+    ssh_pub_key = File.readlines("..\\ssh\\id_rsa.pub.txt").first.strip  
+	 
+    s.inline = <<-SHELL
+      echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+	  mkdir -p /root/.ssh	  
+      echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+	  chmod 400 /root/.ssh/authorized_keys
+	  cp /tmp/resolv.conf /etc/resolv.conf
+#	  /etc/init.d/network restart
+    SHELL
+
+	
+  end
+  
+  
+  
+end

@@ -1,0 +1,40 @@
+---
+
+ - name: Install Apache
+   yum: name=httpd24u state=present
+
+ - name: MPM Configuration
+   template: src=00-mpm.conf.j2 dest=/etc/httpd/conf.modules.d/00-mpm.conf
+   notify:
+     - Restart Apache
+
+ - name: HTTPD Configuration
+   template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+   notify:
+     - Restart Apache
+
+ - name: Creates websites directory
+   file: 
+     path: /var/www/html/sites 
+     state: directory 
+     owner: apache 
+     group: apache
+     mode: 0755
+
+ - name: Install PHP 7.1
+   yum: name={{item}} state=present
+   with_items:
+     - php71
+     - php71-php
+     - php71-php-mysqlnd
+
+ - name: Set SeLinux permissive to allow httpd connections to mysql
+   selinux:
+    policy: targeted
+    state: permissive
+
+ - name: Enable on boot and start httpd
+   service:
+    name: httpd
+    enabled: yes
+    state: started

@@ -1,0 +1,43 @@
+---
+
+# Install play
+- name: Play to install MySQL
+  hosts: mysqlservers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - mysql-dbserver
+
+# Configure database
+- name: Play to configure MySQL
+  hosts: mysqlservers
+  become: yes
+  become_user: mysql
+  gather_facts: no
+  tasks:  
+  - name: Initialize MySQL
+    shell: mysqld --initialize-insecure
+    register: is_new_mysql
+    args:
+      creates: "{{ data_dir  }}/mysql"
+
+  - name: Enable and start MySQL
+    become_user: root
+    service:
+      name: mysqld
+      enabled: yes
+      state: started
+
+  - name: Secure MySQL
+    shell: echo "Not needed with MySQL 5.7 with initialize"
+    when: is_new_mysql.stdout.find('skipped') != 0
+
+  - name: Remove anonym users
+    mysql_user:
+      name: ''
+      host: localhost
+      state: absent
+      login_user: root
+
+

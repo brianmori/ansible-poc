@@ -1,0 +1,23 @@
+$TTL 86400
+@ IN SOA primary.mypoc.io. root.mypoc.io. (
+2014112511 ;Serial
+3600 ;Refresh
+1800 ;Retry
+604800 ;Expire
+86400 ;Minimum TTL
+)
+;Name Server Information
+@ IN NS primary.mypoc.io.
+
+;Reverse lookup for Name Server
+100 IN PTR primary.mypoc.io.
+
+;PTR Record IP address to HostName
+
+2 IN PTR webserver-test-1.mypoc.io.
+3 IN PTR dbserver-test-1.mypoc.io.
+4 IN PTR webserver-prod-1.mypoc.io.
+5 IN PTR dbserver-prod-1.mypoc.io.
+
+
+

@@ -1,0 +1,28 @@
+---
+
+- name: Add EPEL7 repository
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Add EPEL6 repository
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpma
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: Add REMI7 repository
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Add CentOS7 SCL repository
+  yum:
+    name: centos-release-scl
+    state: present
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+- name: Add CentOS7 IUS repository
+  yum:
+    name: https://centos7.iuscommunity.org/ius-release.rpm
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+

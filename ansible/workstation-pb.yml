@@ -1,0 +1,9 @@
+---
+
+#global play declaration
+- hosts: workstation-vm
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - dnsserver

@@ -1,0 +1,32 @@
+$TTL 86400
+@ IN SOA primary.mypoc.io. root.mypoc.io. (
+2016042112 ;Serial
+3600 ;Refresh
+1800 ;Retry
+604800 ;Expire
+43200 ;Minimum TTL
+)
+
+;Name Server Information
+@ IN NS primary.mypoc.io.
+
+;IP address of Name Server
+primary IN A 192.168.56.100
+
+;A - Record HostName To Ip Addres
+
+webserver-test-1 IN A 192.168.56.2
+dbserver-test-1 IN A 192.168.56.3
+webserver-prod-1 IN A 192.168.56.4
+dbserver-prod-1 IN A 192.168.56.5
+
+;mail IN A 192.168.56.100
+
+;CNAME record
+www IN CNAME webserver-prod-1.mypoc.io.
+www.test IN CNAME webserver-test-1.mypoc.io.
+
+
+jenkins IN CNAME primary.mypoc.io.
+
+

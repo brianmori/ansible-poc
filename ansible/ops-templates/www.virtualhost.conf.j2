@@ -1,0 +1,15 @@
+ExtendedStatus On
+<VirtualHost *:{{http_port}}>
+    ServerName www.{{env_dns_sub}}mypoc.io
+    DocumentRoot "/var/www/html/sites/www.{{env_dns_sub}}mypoc.io"
+
+    <Directory "/var/www/html/sites/www.{{env_dns_sub}}mypoc.io">
+      Options +Indexes
+      Require all granted
+    </Directory>
+
+<Location "/server-status">
+    SetHandler server-status
+</Location>
+
+</VirtualHost>

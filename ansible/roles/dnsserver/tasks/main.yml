@@ -1,0 +1,36 @@
+---
+ - name: Install BIND
+   yum: name=bind state=present
+
+ - name: Copy Named configuration
+   copy:
+    src: named.conf
+    dest: /etc/named.conf
+    owner: root
+    group: root
+    mode: 0644
+   notify:
+      - Restart BIND
+
+ - name: Copy forward zone
+   copy:
+    src: fwd.mypoc.io.db
+    dest: /var/named/fwd.mypoc.io.db
+    owner: root
+    group: root
+    mode: 0644
+   notify:
+      - Restart BIND
+
+ - name: Copy reverse zone
+   copy:
+    src: 56.168.192.db
+    dest: /var/named/56.168.192.db
+    owner: root
+    group: root
+    mode: 0644
+   notify:
+      - Restart BIND
+
+ - name: Start and Enable Bind
+   service: name=named enabled=yes state=started

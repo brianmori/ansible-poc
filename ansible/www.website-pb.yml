@@ -1,0 +1,63 @@
+---
+
+- name: Setup VH Brian
+  hosts: webservers
+  become: yes
+  vars_files:
+   - ops-vars/vars
+  tasks:
+
+  - name: Creates websites directory
+    file:
+       path: /var/www/html/sites/www.{{env_dns_sub}}mypoc.io
+       state: directory
+       owner: vagrant
+       group: vagrant
+       mode: 0755
+
+  - copy:
+      src: ops-files/phpinfo.php
+      dest: /var/www/html/sites/www.{{env_dns_sub}}mypoc.io/phpinfo.php
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
+  - template:
+      src: ops-templates/test_db.php.j2
+      dest: /var/www/html/sites/www.{{env_dns_sub}}mypoc.io/test_db.php
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
+  - name: Deploy a file or VH
+    template:
+        src: ops-templates/www.virtualhost.conf.j2
+        dest: /etc/httpd/conf.d/www.{{env_dns_sub}}mypoc.io.conf
+    notify:
+    - restart apache
+
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted
+
+
+# DB play
+
+- name: Setup database Brian
+  hosts: mysqlservers
+  tasks:
+
+  - name: Create tech user
+    mysql_user:
+     name: "{{ www_db_usr }}"
+     login_user: root
+     password: "{{ www_db_psw }}"
+     priv: '*.*:ALL,GRANT'
+     host: "%" 
+     state: present
+  
+  - name: Create the new database
+    mysql_db:
+      name: "{{ www_db_schema }}"
+      login_user: root
+      state: present

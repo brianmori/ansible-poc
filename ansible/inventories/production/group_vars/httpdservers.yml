@@ -1,0 +1,6 @@
+---
+
+mpm_mod: prefork
+http_port: 80
+
+max_request_workers: 6

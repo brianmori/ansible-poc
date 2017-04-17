@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>{{ws_title}} - {{env}}</title>
+</head>
+    <body>
+    <?php echo '<p>Hello World from <b>{{env}}</b> environment</p>';
+
+    // In the variables section below, replace user and password with your own MySQL credentials as created on your server
+    $servername = "{{db_server_hostname}}";
+
+    $db = "{{www_db_schema}}";
+    $username = "{{www_db_usr}}";
+    $password = "{{www_db_psw}}";
+
+    // Create MySQL connection 
+    $conn = mysqli_connect($servername, $username, $password, $db);
+
+    // Check connection - if it fails, output will include the error message
+    if (!$conn) {
+        die('<p>Connection failed: <p>' . mysqli_connect_error());
+    }
+    echo '<p>Connected successfully</p>';
+
+    /* print host information */
+    printf("Host info: %s\n", $conn->host_info);
+
+    /* close connection */
+    $conn->close();
+
+
+    ?>
+</body>
+</html>

@@ -1,0 +1,10 @@
+---
+ - include: repositories.yml
+
+ - name: Copy resolv.conf for internal DNS
+   copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
